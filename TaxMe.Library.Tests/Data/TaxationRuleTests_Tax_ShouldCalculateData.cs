@@ -85,15 +85,15 @@ internal sealed class TaxationRuleTests_Tax_ShouldCalculateData : IEnumerable<ob
         bool[] decisions = { true, false };
 
         //foreach threshold add the lower and upper bounds as income arguments for the test
-        foreach (var income in _thresholds)
+        foreach (var threshold in _thresholds)
             // foreach medicare, tbr, & age, state use all combinations as arguments for the test
             foreach (var medicare in decisions)
                 foreach (var tbr in decisions)
                     foreach (var age in _ages)
                     {
                         // construct some the arguments for the test using low income if its in a low income threshold
-                        yield return Arguments(income.LB, age, medicare, tbr, income.LI);
-                        yield return Arguments(income.UB, age, medicare, tbr, income.LI);
+                        yield return Arguments(threshold.LB, age, medicare, tbr, threshold.LI);
+                        yield return Arguments(threshold.UB, age, medicare, tbr, threshold.LI);
                     }
     }
 
