@@ -91,14 +91,17 @@ internal sealed class TaxationRuleTests_Tax_ShouldCalculateData : IEnumerable<ob
                 foreach (var tbr in decisions)
                     foreach (var age in _ages)
                     {
-                        // construct some the arguments for the test without low income levy
-                        yield return Arguments(income.LB, age, medicare, tbr, false);
-                        yield return Arguments(income.UB, age, medicare, tbr, false);
                         // if low income levy is applicable on the threshold construct more arguments with the levy
                         if (income.LI)
                         {
-                            yield return Arguments(income.LB, age, medicare, tbr, true);
-                            yield return Arguments(income.UB, age, medicare, tbr, true);
+                            yield return Arguments(income.LB, age, medicare, tbr, income.LI);
+                            yield return Arguments(income.UB, age, medicare, tbr, income.LI);
+                        }
+                        else
+                        {
+                            // construct some the arguments for the test without low income levy
+                            yield return Arguments(income.LB, age, medicare, tbr, income.LI);
+                            yield return Arguments(income.UB, age, medicare, tbr, income.LI);
                         }
                     }
     }
