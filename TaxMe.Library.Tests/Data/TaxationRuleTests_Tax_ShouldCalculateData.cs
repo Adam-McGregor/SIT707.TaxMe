@@ -50,13 +50,15 @@ internal sealed class TaxationRuleTests_Tax_ShouldCalculateData : IEnumerable<ob
         li &= age > 17;
         // find the first applicable threshold with the income within its range
         ThresholdModel threshold = _thresholds.First(x => x.LB <= income && income <= x.UB && x.LI == li);
+        // add the tbr percentile to the tax rate if it applies
+        double tbrOffset = 0;
+        if (tbr && income > _thresholds[^1].LB - 1)
+            tbrOffset = _TBRLevy;
         // calculate the tax of income in excess of the lower bound
-        double tax = (income - threshold.LB + 1) * threshold.Tax + threshold.Base;
-        // apply any levies that may apply
+        double tax = (income - threshold.LB + 1) * (threshold.Tax + tbrOffset) + threshold.Base;
+        // apply medicare levy if it applies
         if (tax > 0 && medicare)
             tax += income * _medicare;
-        if (tbr && income > _thresholds[^1].LB - 1)
-            tax += (income - threshold.Base) * _TBRLevy;
         return tax;
     }
 
